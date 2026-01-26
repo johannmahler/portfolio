@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile First -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile Web | Johann Mahler</title>
+    <meta name="description" content="Clean, mobile-first HTML5 base layout for a scalable responsive web project.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Johann Mahler">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- JS -->
+    <script src="js/menu.js" defer></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#home" class="logo">Atallier</a>
+
+        <!-- Hamburger button -->
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Ich bin <span class="auto-type"></span></h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem commodi porro saepe architecto ad
+                orporis molestiae.</p>
+            <p class="highlights">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, omnis?</p>
+            <a href="#contact" class="cta-button">Lets connect</a>
+        </div>
+        <div class="hero-image">
+            <img src="images/main_photo.jpg" alt="Profile" class="profile-img">
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills reveal">
+        <h2>Technical expertise</h2>
+        <div class="skills-grid">
+            <div class="skill-card reveal">
+                <i class="fas fa-code"></i>
+                <h3>Frontend Developer</h3>
+                <p>React, HTML, CSS, JS</p>
+            </div>
+            <div class="skill-card reveal">
+                <i class="fas fa-code"></i>
+                <h3>Frontend Developer</h3>
+                <p>React, HTML, CSS, JS</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact reveal">
+        <h2>Contact Me</h2>
+        <p>Hast du ein Projekt oder eine Idee? Schreib mir gern eine Nachricht.</p>
+
+        <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST" class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Dein Name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" name="email" placeholder="deine@email.de" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Nachricht</label>
+                <textarea id="message" name="message" rows="5" placeholder="Deine Nachricht..." required></textarea>
+            </div>
+
+            <button type="submit" class="cta-button">Nachricht senden</button>
+
+            <p class="form-status" aria-live="polite"></p>
+        </form>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="reveal">
+        <p>&copy; 2025 Johann Mahler Reserved</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
+    <!-- typed js -->
+    <script src="https://unpkg.com/typed.js@3.0.0/dist/typed.umd.js"></script>
+</body>
+
+</html>

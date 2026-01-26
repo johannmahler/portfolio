@@ -1,0 +1,493 @@
+/* ================================================================================================================================
+   GLOBAL STYLES
+========================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+:root {
+    --dark-bg: #0a0a0a;
+    --darker-bg: #050505;
+    --accent: #2ecc71;
+    --accent-glow: rgba(46, 204, 113, 0.4);
+    --text: #ffffff;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 20, 20, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+    font-size: 1.4rem;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-links a.active {
+    color: var(--accent);
+}
+
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+
+
+
+
+
+
+/* =========================
+   Hamburger Menu Button
+========================= */
+.menu-toggle {
+    display: none;
+    /* nur mobil sichtbar */
+    position: relative;
+    width: 32px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+/* Die 3 Striche */
+.menu-toggle span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--text);
+    border-radius: 3px;
+    transition: all 0.35s ease;
+}
+
+/* exakte Positionen */
+.menu-toggle span:nth-child(1) {
+    top: 0;
+}
+
+.menu-toggle span:nth-child(2) {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.menu-toggle span:nth-child(3) {
+    bottom: 0;
+}
+
+/* =========================
+   OPEN STATE (X)
+========================= */
+.menu-toggle.open span:nth-child(1) {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+
+/* =========================
+   HERO SECTION
+========================= */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 12% 5%;
+    background: radial-gradient(circle at 75% 30%, var(--accent-glow) 0%, transparent 30%);
+}
+
+.hero-content {
+    flex: 1;
+    padding-right: 5rem;
+}
+
+.hero-image {
+    flex: 1;
+    text-align: center;
+}
+
+.profile-img {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent);
+    box-shadow: 0 0 50px var(--accent-glow);
+    animation: float 3s ease-in-out infinite;
+    filter: grayscale(0.2) contrast(1.1);
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.hero h1 {
+    white-space: nowrap;
+}
+
+.auto-type {
+    display: inline-block;
+}
+
+/* Typed.js Cursor */
+.typed-cursor {
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--accent);
+
+    animation: blink 1s infinite;
+    transition: transform 0.15s ease-out;
+}
+
+/* kleine Verzögerung */
+.auto-type+.typed-cursor {
+    transform: translateX(2px);
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    opacity: 0.9;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, var(--accent), #27ae60);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* =========================
+   SKILLS SECTION
+========================= */
+.skills {
+    padding: 5rem 5%;
+    background: var(--darker-bg);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.skill-card {
+    padding: 2rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px var(--accent-glow);
+}
+
+.skill-card i {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+/* =========================
+   CONTACT SECTION
+========================= */
+.contact {
+    padding: 6rem 5%;
+    background: var(--dark-bg);
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--accent) 30%, #ffffff 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contact p {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-size: 1.1rem;
+    opacity: 0.85;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 40px var(--accent-glow);
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.8rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(10, 10, 10, 0.8);
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    background: rgba(10, 10, 10, 0.95);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-form .cta-button {
+    width: 100%;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    background: var(--darker-bg);
+    padding: 3rem 5%;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-links {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.social-links a {
+    color: var(--text);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--accent);
+    transform: translateY(-3px);
+}
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 8rem;
+    }
+
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 3rem;
+    }
+
+    .profile-img {
+        width: 280px;
+        height: 280px;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 75%;
+        padding: 6rem 2rem;
+        /* 🔥 WICHTIG */
+        background: rgba(10, 20, 20, 0.95);
+        flex-direction: column;
+        gap: 3rem;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        transition: right 0.3s ease;
+        z-index: 1050;
+    }
+
+    .nav-links.open {
+        right: 0;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .contact-form {
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 1.4rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.95rem;
+        padding: 0.8rem 0.9rem;
+    }
+
+    .contact-form .cta-button {
+        font-size: 1rem;
+        padding: 0.9rem;
+    }
+}
+
+/* formstatus */
+.form-status {
+    margin-top: 1rem;
+    font-size: 1rem;
+    text-align: center;
+}

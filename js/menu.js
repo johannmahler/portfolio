@@ -128,3 +128,31 @@ if (form) {
         }
     });
 }
+
+/* =========================
+   PROJECTS CAROUSEL
+========================= 
+const track = document.querySelector('.carousel-track');
+const prevBtn = document.querySelector('.carousel-btn.prev');
+const nextBtn = document.querySelector('.carousel-btn.next');
+
+if (track && prevBtn && nextBtn) {
+    const cards = document.querySelectorAll('.project-card');
+    const cardWidth = cards[0].offsetWidth + 32; // 32px = gap (2rem)
+    let index = 0;
+
+    nextBtn.addEventListener('click', () => {
+        if (index < cards.length - 1) {
+            index++;
+            track.style.transform = `translateX(-${cardWidth * index}px)`;
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (index > 0) {
+            index--;
+            track.style.transform = `translateX(-${cardWidth * index}px)`;
+        }
+    });
+}
+*/

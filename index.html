@@ -68,13 +68,53 @@
             </div>
         </div>
     </section>
+    <!-- projects -->
+    <section id="projects" class="projects reveal">
+        <h2>Projects</h2>
+
+        <div class="projects-carousel">
+            <button class="carousel-btn prev">&#10094;</button>
+
+            <div class="carousel-track">
+                <div class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="images/main_photo.jpg" alt="Project 1">
+                        </div>
+                        <div class="card-back">
+                            <h3>Projekt Titel</h3>
+                            <p>Kurzbeschreibung des Projekts.</p>
+                            <span>HTML · CSS · JS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="images/main_photo.jpg" alt="Project 1">
+                        </div>
+                        <div class="card-back">
+                            <h3>Projekt Titel</h3>
+                            <p>Kurzbeschreibung des Projekts.</p>
+                            <span>HTML · CSS · JS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dupliziere project-card für weitere Projekte -->
+            </div>
+
+            <button class="carousel-btn next">&#10095;</button>
+        </div>
+    </section>
+
 
     <!-- Contact Section -->
     <section id="contact" class="contact reveal">
         <h2>Contact Me</h2>
         <p>Hast du ein Projekt oder eine Idee? Schreib mir gern eine Nachricht.</p>
 
-        <form action="https://formspree.io/f/DEINE_FORM_ID" method="POST" class="contact-form" id="contactForm">
+        <form action="https://formspree.io/f/xbdopjng" method="POST" class="contact-form" id="contactForm">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" placeholder="Dein Name" required>
@@ -93,6 +133,11 @@
             <button type="submit" class="cta-button">Nachricht senden</button>
 
             <p class="form-status" aria-live="polite"></p>
+            <!-- spam schutz und betreff -->
+            <input type="hidden" name="_subject" value="Neue Nachricht von deiner Website">
+            <input type="text" name="_gotcha" style="display:none">
+
+
         </form>
     </section>
 

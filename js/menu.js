@@ -144,14 +144,35 @@ const nextBtn = document.querySelector('.carousel-btn.next');
 let index = 0;
 
 function updateCarousel() {
+    if (!track || cards.length === 0) return;
+
     const cardWidth = cards[0].offsetWidth;
     const gap = 32;
     const carousel = document.querySelector('.projects-carousel');
     const carouselWidth = carousel.offsetWidth;
 
-    let offset = window.innerWidth >= 768 ? 24 : (carouselWidth - cardWidth) / 2;
-    track.style.transform = `translateX(${offset - index * (cardWidth + gap)}px)`;
+    const totalWidth = cards.length * cardWidth + (cards.length - 1) * gap;
+
+    let offset;
+
+    if (totalWidth <= carouselWidth) {
+        // Alle Cards passen -> zentrieren
+        offset = (carouselWidth - totalWidth) / 2;
+    } else {
+        // Mehr Cards als Container -> aktuelle Card zentrieren
+        offset = (carouselWidth - cardWidth) / 2 - index * (cardWidth + gap);
+
+        // Max/Min Offset damit nicht über Scrollbereich hinaus
+        const maxOffset = 0;
+        const minOffset = carouselWidth - totalWidth;
+        if (offset > maxOffset) offset = maxOffset;
+        if (offset < minOffset) offset = minOffset;
+    }
+
+    // Setze transform
+    track.style.transform = `translateX(${offset}px)`;
 }
+
 
 nextBtn.addEventListener('click', () => {
     index++;

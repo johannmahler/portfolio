@@ -357,27 +357,39 @@ body {
     right: 0;
 }
 
-/* Projects carousel media */
+/* =========================
+   PROJECTS CAROUSEL RESPONSIVE FIX
+========================= */
 @media (max-width: 768px) {
     .projects-carousel {
-        display: flex;
-        justify-content: center;
-        overflow: hidden;
+        display: block;
+        /* nicht flex, damit erste Card links bleibt */
+        overflow-x: auto;
+        /* horizontal scroll für Swipe */
+        scroll-snap-type: x mandatory;
+        /* smooth snapping */
+        -webkit-overflow-scrolling: touch;
+        /* iOS momentum scroll */
     }
 
     .carousel-track {
-        justify-content: center;
+        display: flex;
+        gap: 1rem;
+        padding-left: 1rem;
+        /* Abstand links */
+        scroll-snap-type: x mandatory;
     }
 
     .project-card {
-        /* margin: 0 auto; */
-        /* ✅ ZENTRIERT EINZELNE CARD */
         flex: 0 0 auto;
-        /* ✅ KRITISCH */
+        scroll-snap-align: start;
+        /* Card linksbündig beim scrollen */
+        margin-right: 1rem;
     }
 
     .carousel-btn {
-        display: block;
+        display: none;
+        /* Buttons auf Mobile optional ausblenden */
     }
 }
 

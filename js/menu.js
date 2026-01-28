@@ -41,7 +41,7 @@ window.addEventListener('scroll', () => {
     if (!navbar) return;
 
     navbar.style.backgroundColor =
-        window.scrollY > 50 ? 'rgba(10, 110, 10, 0.98)' : 'rgba(10, 10, 10, 0.95)';
+        window.scrollY > 50 ? 'rgba(10, 110, 10, 0.48)' : 'rgba(10, 10, 10, 0.95)';
 
     // ACTIVE LINK ON SCROLL
     const scrollPos = window.pageYOffset + navHeight + 10;
@@ -91,8 +91,8 @@ revealElements.forEach(el => observer.observe(el));
 // cursor typed
 var typed = new Typed(".auto-type", {
     strings: ["Mediengestalter", "Creator", "Coder"],
-    typeSpeed: 150,
-    backSpeed: 150,
+    typeSpeed: 50,
+    backSpeed: 50,
     loop: true
 });
 /* =========================
@@ -131,28 +131,120 @@ if (form) {
 
 /* =========================
    PROJECTS CAROUSEL
-========================= 
+========================= */
+
+
+// ab hier neu version fix
 const track = document.querySelector('.carousel-track');
+const cards = document.querySelectorAll('.project-card');
 const prevBtn = document.querySelector('.carousel-btn.prev');
 const nextBtn = document.querySelector('.carousel-btn.next');
 
-if (track && prevBtn && nextBtn) {
-    const cards = document.querySelectorAll('.project-card');
-    const cardWidth = cards[0].offsetWidth + 32; // 32px = gap (2rem)
-    let index = 0;
+let index = 0;
 
-    nextBtn.addEventListener('click', () => {
-        if (index < cards.length - 1) {
-            index++;
-            track.style.transform = `translateX(-${cardWidth * index}px)`;
-        }
-    });
+function updateCarousel() {
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 32; // 2rem gap
+    const carousel = document.querySelector('.projects-carousel');
+    const carouselWidth = carousel.offsetWidth;
 
-    prevBtn.addEventListener('click', () => {
-        if (index > 0) {
-            index--;
-            track.style.transform = `translateX(-${cardWidth * index}px)`;
-        }
+    let offset;
+
+    if (window.innerWidth >= 768) {
+        // ✅ Desktop: linksbündig mit Padding
+        offset = 24; // 🔥 Abstand zum linken Rand (anpassbar: 16 / 24 / 32)
+    } else {
+        // ✅ Mobile: zentriert
+        offset = (carouselWidth - cardWidth) / 2;
+    }
+
+    track.style.transform =
+        `translateX(${offset - index * (cardWidth + gap)}px)`;
+}
+
+// Buttons
+nextBtn.addEventListener('click', () => {
+    index++;
+    if (index >= cards.length) index = cards.length - 1;
+    updateCarousel();
+});
+
+prevBtn.addEventListener('click', () => {
+    index--;
+    if (index < 0) index = 0;
+    updateCarousel();
+});
+
+// ✅ WICHTIG: beim Laden & Resize
+window.addEventListener('load', updateCarousel);
+window.addEventListener('resize', updateCarousel);
+
+/* =========================
+   MOBILE TAP FLIP (PROJECT CARDS)
+========================= */
+const projectCards = document.querySelectorAll('.project-card');
+
+// nur auf Touch-Geräten aktiv
+if (window.matchMedia('(hover: none)').matches) {
+    projectCards.forEach(card => {
+        card.addEventListener('click', e => {
+            // verhindert Carousel-Klick-Konflikte
+            e.stopPropagation();
+
+            // andere Karten zurückdrehen
+            projectCards.forEach(c => {
+                if (c !== card) c.classList.remove('flipped');
+            });
+
+            // aktuelle togglen
+            const flipped = card.classList.toggle('flipped');
+            // vibration  flipcard
+            if (navigator.vibrate) {
+                navigator.vibrate(flipped ? 15 : [10, 40]);
+            }
+
+
+        });
     });
 }
-*/
+document.addEventListener('click', () => {
+    projectCards.forEach(card => card.classList.remove('flipped'));
+});
+const popup = document.getElementById('imgPopup');
+const popupImg = popup.querySelector('img');
+const popupClose = popup.querySelector('.popup-close');
+
+document.querySelectorAll('.img-popup-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.stopPropagation(); // verhindert Flip-Rücksprung
+
+        const imgSrc = btn.dataset.img;
+        popupImg.src = imgSrc;
+        popup.classList.add('active');
+
+        // 📳 optional haptic
+        if (navigator.vibrate) navigator.vibrate(15);
+    });
+});
+
+popupClose.addEventListener('click', closePopup);
+popup.addEventListener('click', e => {
+    if (e.target === popup) closePopup();
+});
+
+function closePopup() {
+    popup.classList.remove('active');
+    popupImg.src = '';
+}
+let startX = 0;
+
+track.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+});
+
+track.addEventListener("touchend", e => {
+    const endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextBtn.click();
+    if (endX - startX > 50) prevBtn.click();
+
+});

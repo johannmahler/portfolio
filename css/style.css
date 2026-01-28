@@ -337,7 +337,8 @@ body {
 
 /* Buttons */
 .carousel-btn {
-    position: absolute;
+    display: none !important;
+    /* position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.6);
@@ -346,16 +347,16 @@ body {
     font-size: 2rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    z-index: 10;
+    z-index: 10; */
 }
 
-.carousel-btn.prev {
+/* .carousel-btn.prev {
     left: 0;
 }
 
 .carousel-btn.next {
     right: 0;
-}
+} */
 
 /* =========================
    PROJECTS CAROUSEL RESPONSIVE FIX
@@ -387,10 +388,7 @@ body {
         margin-right: 1rem;
     }
 
-    .carousel-btn {
-        display: none;
-        /* Buttons auf Mobile optional ausblenden */
-    }
+
 }
 
 

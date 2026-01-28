@@ -174,17 +174,9 @@ function updateCarousel() {
 }
 
 
-nextBtn.addEventListener('click', () => {
-    index++;
-    if (index >= cards.length) index = cards.length - 1;
-    updateCarousel();
-});
 
-prevBtn.addEventListener('click', () => {
-    index--;
-    if (index < 0) index = 0;
-    updateCarousel();
-});
+
+
 
 window.addEventListener('load', updateCarousel);
 window.addEventListener('resize', updateCarousel);
@@ -237,13 +229,4 @@ function closePopup() {
 /* =========================
    CAROUSEL SWIPE MOBILE
 ========================= */
-let startX = 0;
-track.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-});
 
-track.addEventListener("touchend", e => {
-    const endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) nextBtn.click();
-    if (endX - startX > 50) prevBtn.click();
-});

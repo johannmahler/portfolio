@@ -5,9 +5,7 @@ const navbar = document.querySelector('.navbar');
 const navHeight = navbar ? navbar.offsetHeight : 0;
 
 const navLinks = document.querySelectorAll('.nav-links a');
-const sections = Array.from(navLinks)
-    .map(link => document.querySelector(link.getAttribute('href')))
-    .filter(Boolean);
+const sections = Array.from(navLinks).map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
 
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinksContainer = document.querySelector('.nav-links');
@@ -23,9 +21,10 @@ navLinks.forEach(link => {
         e.preventDefault();
 
         const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
         window.scrollTo({ top: y, behavior: 'smooth' });
 
-        // Close menu on mobile
+        // Close menu on mobile after click
         if (navLinksContainer.classList.contains('open')) {
             navLinksContainer.classList.remove('open');
             menuToggle.classList.remove('open');
@@ -89,16 +88,13 @@ const observer = new IntersectionObserver(
 );
 revealElements.forEach(el => observer.observe(el));
 
-/* =========================
-   TYPED.JS CURSOR
-========================= */
+// cursor typed
 var typed = new Typed(".auto-type", {
     strings: ["Mediengestalter", "Creator", "Coder"],
     typeSpeed: 50,
     backSpeed: 50,
     loop: true
 });
-
 /* =========================
    CONTACT FORM (Formspree)
 ========================= */
@@ -106,8 +102,9 @@ const form = document.querySelector('#contactForm');
 const status = document.querySelector('.form-status');
 
 if (form) {
-    form.addEventListener('submit', async e => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const data = new FormData(form);
 
         try {
@@ -135,6 +132,9 @@ if (form) {
 /* =========================
    PROJECTS CAROUSEL
 ========================= */
+
+
+// ab hier neu version fix
 const track = document.querySelector('.carousel-track');
 const cards = document.querySelectorAll('.project-card');
 const prevBtn = document.querySelector('.carousel-btn.prev');
@@ -143,36 +143,39 @@ const nextBtn = document.querySelector('.carousel-btn.next');
 let index = 0;
 
 function updateCarousel() {
-    if (!track || cards.length === 0) return;
-
     const cardWidth = cards[0].offsetWidth;
-    const gap = 32;
+    const gap = 32; // 2rem gap
     const carousel = document.querySelector('.projects-carousel');
     const carouselWidth = carousel.offsetWidth;
 
     let offset;
+
     if (window.innerWidth >= 768) {
-        offset = 24;
+        // ✅ Desktop: linksbündig mit Padding
+        offset = 24; // 🔥 Abstand zum linken Rand (anpassbar: 16 / 24 / 32)
     } else {
+        // ✅ Mobile: zentriert
         offset = (carouselWidth - cardWidth) / 2;
     }
 
-    track.style.transform = `translateX(${offset - index * (cardWidth + gap)}px)`;
+    track.style.transform =
+        `translateX(${offset - index * (cardWidth + gap)}px)`;
 }
 
-// Button clicks
+// Buttons
 nextBtn.addEventListener('click', () => {
     index++;
     if (index >= cards.length) index = cards.length - 1;
     updateCarousel();
 });
+
 prevBtn.addEventListener('click', () => {
     index--;
     if (index < 0) index = 0;
     updateCarousel();
 });
 
-// Load & Resize
+// ✅ WICHTIG: beim Laden & Resize
 window.addEventListener('load', updateCarousel);
 window.addEventListener('resize', updateCarousel);
 
@@ -181,40 +184,45 @@ window.addEventListener('resize', updateCarousel);
 ========================= */
 const projectCards = document.querySelectorAll('.project-card');
 
-// Touch detection
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-if (isTouchDevice) {
+// nur auf Touch-Geräten aktiv
+if (window.matchMedia('(hover: none)').matches) {
     projectCards.forEach(card => {
         card.addEventListener('click', e => {
-            // Ignore popup buttons
-            if (e.target.closest('.img-popup-btn')) return;
+            // verhindert Carousel-Klick-Konflikte
+            e.stopPropagation();
 
-            projectCards.forEach(c => { if (c !== card) c.classList.remove('flipped'); });
+            // andere Karten zurückdrehen
+            projectCards.forEach(c => {
+                if (c !== card) c.classList.remove('flipped');
+            });
+
+            // aktuelle togglen
             const flipped = card.classList.toggle('flipped');
+            // vibration  flipcard
+            if (navigator.vibrate) {
+                navigator.vibrate(flipped ? 15 : [10, 40]);
+            }
 
-            if (navigator.vibrate) navigator.vibrate(flipped ? 15 : [10, 40]);
+
         });
     });
 }
-
-// Close all flips on body click
 document.addEventListener('click', () => {
     projectCards.forEach(card => card.classList.remove('flipped'));
 });
-
-/* =========================
-   IMAGE POPUP
-========================= */
 const popup = document.getElementById('imgPopup');
 const popupImg = popup.querySelector('img');
 const popupClose = popup.querySelector('.popup-close');
 
 document.querySelectorAll('.img-popup-btn').forEach(btn => {
     btn.addEventListener('click', e => {
-        e.stopPropagation();
-        popupImg.src = btn.dataset.img;
+        e.stopPropagation(); // verhindert Flip-Rücksprung
+
+        const imgSrc = btn.dataset.img;
+        popupImg.src = imgSrc;
         popup.classList.add('active');
+
+        // 📳 optional haptic
         if (navigator.vibrate) navigator.vibrate(15);
     });
 });
@@ -228,10 +236,6 @@ function closePopup() {
     popup.classList.remove('active');
     popupImg.src = '';
 }
-
-/* =========================
-   CAROUSEL SWIPE (TOUCH)
-========================= */
 let startX = 0;
 
 track.addEventListener("touchstart", e => {
@@ -242,4 +246,5 @@ track.addEventListener("touchend", e => {
     const endX = e.changedTouches[0].clientX;
     if (startX - endX > 50) nextBtn.click();
     if (endX - startX > 50) prevBtn.click();
+
 });

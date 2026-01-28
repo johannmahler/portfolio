@@ -5,7 +5,9 @@ const navbar = document.querySelector('.navbar');
 const navHeight = navbar ? navbar.offsetHeight : 0;
 
 const navLinks = document.querySelectorAll('.nav-links a');
-const sections = Array.from(navLinks).map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+const sections = Array.from(navLinks)
+    .map(link => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
 
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinksContainer = document.querySelector('.nav-links');
@@ -24,7 +26,7 @@ navLinks.forEach(link => {
 
         window.scrollTo({ top: y, behavior: 'smooth' });
 
-        // Close menu on mobile after click
+        // Close menu on mobile
         if (navLinksContainer.classList.contains('open')) {
             navLinksContainer.classList.remove('open');
             menuToggle.classList.remove('open');
@@ -43,7 +45,6 @@ window.addEventListener('scroll', () => {
     navbar.style.backgroundColor =
         window.scrollY > 50 ? 'rgba(10, 110, 10, 0.48)' : 'rgba(10, 10, 10, 0.95)';
 
-    // ACTIVE LINK ON SCROLL
     const scrollPos = window.pageYOffset + navHeight + 10;
     sections.forEach(section => {
         if (!section) return;
@@ -88,13 +89,16 @@ const observer = new IntersectionObserver(
 );
 revealElements.forEach(el => observer.observe(el));
 
-// cursor typed
+/* =========================
+   TYPED.JS
+========================= */
 var typed = new Typed(".auto-type", {
     strings: ["Mediengestalter", "Creator", "Coder"],
     typeSpeed: 50,
     backSpeed: 50,
     loop: true
 });
+
 /* =========================
    CONTACT FORM (Formspree)
 ========================= */
@@ -102,9 +106,8 @@ const form = document.querySelector('#contactForm');
 const status = document.querySelector('.form-status');
 
 if (form) {
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
-
         const data = new FormData(form);
 
         try {
@@ -132,9 +135,6 @@ if (form) {
 /* =========================
    PROJECTS CAROUSEL
 ========================= */
-
-
-// ab hier neu version fix
 const track = document.querySelector('.carousel-track');
 const cards = document.querySelectorAll('.project-card');
 const prevBtn = document.querySelector('.carousel-btn.prev');
@@ -144,25 +144,20 @@ let index = 0;
 
 function updateCarousel() {
     const cardWidth = cards[0].offsetWidth;
-    const gap = 32; // 2rem gap
+    const gap = 32;
     const carousel = document.querySelector('.projects-carousel');
     const carouselWidth = carousel.offsetWidth;
 
     let offset;
-
     if (window.innerWidth >= 768) {
-        // ✅ Desktop: linksbündig mit Padding
-        offset = 24; // 🔥 Abstand zum linken Rand (anpassbar: 16 / 24 / 32)
+        offset = 24;
     } else {
-        // ✅ Mobile: zentriert
         offset = (carouselWidth - cardWidth) / 2;
     }
 
-    track.style.transform =
-        `translateX(${offset - index * (cardWidth + gap)}px)`;
+    track.style.transform = `translateX(${offset - index * (cardWidth + gap)}px)`;
 }
 
-// Buttons
 nextBtn.addEventListener('click', () => {
     index++;
     if (index >= cards.length) index = cards.length - 1;
@@ -175,54 +170,50 @@ prevBtn.addEventListener('click', () => {
     updateCarousel();
 });
 
-// ✅ WICHTIG: beim Laden & Resize
 window.addEventListener('load', updateCarousel);
 window.addEventListener('resize', updateCarousel);
 
 /* =========================
-   MOBILE TAP FLIP (PROJECT CARDS)
+   MOBILE TAP FLIP & POPUP
 ========================= */
-const projectCards = document.querySelectorAll('.project-card');
-
-// nur auf Touch-Geräten aktiv
-if (window.matchMedia('(hover: none)').matches) {
-    projectCards.forEach(card => {
-        card.addEventListener('click', e => {
-            // verhindert Carousel-Klick-Konflikte
-            e.stopPropagation();
-
-            // andere Karten zurückdrehen
-            projectCards.forEach(c => {
-                if (c !== card) c.classList.remove('flipped');
-            });
-
-            // aktuelle togglen
-            const flipped = card.classList.toggle('flipped');
-            // vibration  flipcard
-            if (navigator.vibrate) {
-                navigator.vibrate(flipped ? 15 : [10, 40]);
-            }
-
-
-        });
-    });
-}
-document.addEventListener('click', () => {
-    projectCards.forEach(card => card.classList.remove('flipped'));
-});
 const popup = document.getElementById('imgPopup');
 const popupImg = popup.querySelector('img');
 const popupClose = popup.querySelector('.popup-close');
 
+cards.forEach(card => {
+    card.addEventListener('click', e => {
+        // Popup-Button nicht Flippen
+        if (e.target.closest('.img-popup-btn')) return;
+
+        e.stopPropagation();
+
+        // Andere Cards zurückdrehen
+        cards.forEach(c => {
+            if (c !== card) c.classList.remove('flipped');
+        });
+
+        // Aktuelle Card togglen
+        const flipped = card.classList.toggle('flipped');
+        if (navigator.vibrate) navigator.vibrate(flipped ? 15 : [10, 40]);
+    });
+});
+
+// Klick außerhalb der Cards schließt Flip
+document.addEventListener('click', e => {
+    if (!e.target.closest('.project-card')) {
+        cards.forEach(card => card.classList.remove('flipped'));
+    }
+});
+
+/* =========================
+   POPUP BUTTON
+========================= */
 document.querySelectorAll('.img-popup-btn').forEach(btn => {
     btn.addEventListener('click', e => {
-        e.stopPropagation(); // verhindert Flip-Rücksprung
-
+        e.stopPropagation();
         const imgSrc = btn.dataset.img;
         popupImg.src = imgSrc;
         popup.classList.add('active');
-
-        // 📳 optional haptic
         if (navigator.vibrate) navigator.vibrate(15);
     });
 });
@@ -236,15 +227,15 @@ function closePopup() {
     popup.classList.remove('active');
     popupImg.src = '';
 }
+
+/* =========================
+   CAROUSEL TOUCH SWIPE
+========================= */
 let startX = 0;
 
-track.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-});
-
+track.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
 track.addEventListener("touchend", e => {
     const endX = e.changedTouches[0].clientX;
     if (startX - endX > 50) nextBtn.click();
     if (endX - startX > 50) prevBtn.click();
-
 });

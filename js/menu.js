@@ -21,12 +21,11 @@ navLinks.forEach(link => {
         if (!target) return;
 
         e.preventDefault();
-
         const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
 
         window.scrollTo({ top: y, behavior: 'smooth' });
 
-        // Close menu on mobile
+        // Close mobile menu
         if (navLinksContainer.classList.contains('open')) {
             navLinksContainer.classList.remove('open');
             menuToggle.classList.remove('open');
@@ -37,7 +36,7 @@ navLinks.forEach(link => {
 });
 
 /* =========================
-   NAVBAR SCROLL EFFECT
+   NAVBAR SCROLL EFFECT & ACTIVE LINK
 ========================= */
 window.addEventListener('scroll', () => {
     if (!navbar) return;
@@ -54,7 +53,9 @@ window.addEventListener('scroll', () => {
 
         if (scrollPos >= top && scrollPos < bottom) {
             navLinks.forEach(link => link.classList.remove('active'));
-            const activeLink = Array.from(navLinks).find(link => link.getAttribute('href') === `#${id}`);
+            const activeLink = Array.from(navLinks).find(
+                link => link.getAttribute('href') === `#${id}`
+            );
             if (activeLink) activeLink.classList.add('active');
         }
     });
@@ -90,7 +91,7 @@ const observer = new IntersectionObserver(
 revealElements.forEach(el => observer.observe(el));
 
 /* =========================
-   TYPED.JS
+   TYPED JS
 ========================= */
 var typed = new Typed(".auto-type", {
     strings: ["Mediengestalter", "Creator", "Coder"],
@@ -106,7 +107,7 @@ const form = document.querySelector('#contactForm');
 const status = document.querySelector('.form-status');
 
 if (form) {
-    form.addEventListener('submit', async e => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const data = new FormData(form);
 
@@ -148,13 +149,7 @@ function updateCarousel() {
     const carousel = document.querySelector('.projects-carousel');
     const carouselWidth = carousel.offsetWidth;
 
-    let offset;
-    if (window.innerWidth >= 768) {
-        offset = 24;
-    } else {
-        offset = (carouselWidth - cardWidth) / 2;
-    }
-
+    let offset = window.innerWidth >= 768 ? 24 : (carouselWidth - cardWidth) / 2;
     track.style.transform = `translateX(${offset - index * (cardWidth + gap)}px)`;
 }
 
@@ -174,7 +169,7 @@ window.addEventListener('load', updateCarousel);
 window.addEventListener('resize', updateCarousel);
 
 /* =========================
-   MOBILE TAP FLIP & POPUP
+   MOBILE TAP FLIP & POPUP FIX
 ========================= */
 const popup = document.getElementById('imgPopup');
 const popupImg = popup.querySelector('img');
@@ -182,58 +177,50 @@ const popupClose = popup.querySelector('.popup-close');
 
 cards.forEach(card => {
     card.addEventListener('click', e => {
-        // Popup-Button nicht Flippen
-        if (e.target.closest('.img-popup-btn')) return;
+        const btn = e.target.closest('.img-popup-btn');
 
-        e.stopPropagation();
+        // Button klick → Popup öffnen
+        if (btn) {
+            e.stopPropagation();
+            const imgSrc = btn.dataset.img;
+            popupImg.src = imgSrc;
+            popup.classList.add('active');
+            if (navigator.vibrate) navigator.vibrate(15);
+            return;
+        }
 
-        // Andere Cards zurückdrehen
-        cards.forEach(c => {
-            if (c !== card) c.classList.remove('flipped');
-        });
-
-        // Aktuelle Card togglen
+        // Flip Karte
+        cards.forEach(c => { if (c !== card) c.classList.remove('flipped'); });
         const flipped = card.classList.toggle('flipped');
         if (navigator.vibrate) navigator.vibrate(flipped ? 15 : [10, 40]);
     });
 });
 
-// Klick außerhalb der Cards schließt Flip
+// Klick außerhalb flip zurücksetzen
 document.addEventListener('click', e => {
     if (!e.target.closest('.project-card')) {
         cards.forEach(card => card.classList.remove('flipped'));
     }
 });
 
-/* =========================
-   POPUP BUTTON
-========================= */
-document.querySelectorAll('.img-popup-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const imgSrc = btn.dataset.img;
-        popupImg.src = imgSrc;
-        popup.classList.add('active');
-        if (navigator.vibrate) navigator.vibrate(15);
-    });
-});
-
+// Popup schließen
 popupClose.addEventListener('click', closePopup);
 popup.addEventListener('click', e => {
     if (e.target === popup) closePopup();
 });
-
 function closePopup() {
     popup.classList.remove('active');
     popupImg.src = '';
 }
 
 /* =========================
-   CAROUSEL TOUCH SWIPE
+   CAROUSEL SWIPE MOBILE
 ========================= */
 let startX = 0;
+track.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+});
 
-track.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
 track.addEventListener("touchend", e => {
     const endX = e.changedTouches[0].clientX;
     if (startX - endX > 50) nextBtn.click();

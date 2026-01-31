@@ -42,7 +42,7 @@ window.addEventListener('scroll', () => {
     if (!navbar) return;
 
     navbar.style.backgroundColor =
-        window.scrollY > 50 ? 'rgba(10, 110, 10, 0.48)' : 'rgba(10, 10, 10, 0.95)';
+        window.scrollY > 50 ? 'rgba(10, 110, 10, 0.48)' : 'rgba(10, 10, 10, 0.51)';
 
     const scrollPos = window.pageYOffset + navHeight + 10;
     sections.forEach(section => {
@@ -229,4 +229,14 @@ function closePopup() {
 /* =========================
    CAROUSEL SWIPE MOBILE
 ========================= */
+
+
+
+
+
+
+// skills backgroud
+document.querySelectorAll('.skill-card[data-bg]').forEach(card => {
+    card.style.setProperty('--bg', `url(${card.dataset.bg})`);
+});
 

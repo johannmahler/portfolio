@@ -230,13 +230,3 @@ function closePopup() {
    CAROUSEL SWIPE MOBILE
 ========================= */
 
-
-
-
-
-
-// skills backgroud
-document.querySelectorAll('.skill-card[data-bg]').forEach(card => {
-    card.style.setProperty('--bg', `url(${card.dataset.bg})`);
-});
-

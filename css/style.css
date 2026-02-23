@@ -1,6 +1,4 @@
-/* ================================================================================================================================
-   GLOBAL STYLES
-========================= */
+/* ================================================================================================================================ GLOBAL STYLES ========================= */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,15 +12,11 @@
     --accent: #2ecc71;
     --accent-glow: rgba(46, 204, 113, 0.4);
     --text: #ffffff;
-
     /* Ergänzungen */
-    :root {
-        --accent-color: rgba(10, 110, 10, 0.85);
-        --accent-color-hover: rgba(20, 150, 20, 0.95);
-        --text-light: #ffffff;
-        --radius-full: 999px;
-    }
-
+    --accent-color: rgba(10, 110, 10, 0.85);
+    --accent-color-hover: rgba(20, 150, 20, 0.95);
+    --text-light: #ffffff;
+    --radius-full: 999px;
 }
 
 body {
@@ -103,12 +97,6 @@ body {
     }
 }
 
-
-
-
-
-
-
 /* ========================= Hamburger Menu Button ========================================================================= */
 .menu-toggle {
     display: none;
@@ -162,7 +150,6 @@ body {
     top: 50%;
     transform: translateY(-50%) rotate(-45deg);
 }
-
 
 /* ========================= HERO SECTION ========================================================================= */
 .hero {
@@ -247,8 +234,6 @@ body {
     }
 }
 
-
-
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
@@ -314,8 +299,6 @@ body {
     /* Chrome / Safari */
 }
 
-
-
 /* ========================= PROJECTS SECTION ========================================================================= */
 .projects {
     padding: 5rem 5%;
@@ -338,15 +321,43 @@ section>h2 {
     overflow: hidden;
 }
 
+/* carousel dots only desktop */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.dot.active {
+    background: var(--accent);
+    transform: scale(1.2);
+}
+
+/* Mobile: keine Dots (Swipe reicht) */
+@media (max-width: 768px) {
+    .carousel-dots {
+        display: none;
+    }
+}
+
+/* ende dots */
 .carousel-track {
     display: flex;
     gap: 2rem;
     /* align-items: center; */
     transition: transform 0.4s ease;
-
 }
-
-
 
 /* ========================= PROJECTS CAROUSEL RESPONSIVE FIX ========================================================================= */
 @media (max-width: 768px) {
@@ -375,14 +386,9 @@ section>h2 {
         /* Card linksbündig beim scrollen */
         margin-right: 1rem;
     }
-
-
 }
 
-
-
-
-/* ========================Flip Card ================================================================================================*/
+/* ------------------------- FLIP CARDS ------------------------- */
 .project-card {
     width: 300px;
     height: 380px;
@@ -398,18 +404,17 @@ section>h2 {
     position: relative;
 }
 
-/* ========================Desktop: Hover Flip ================================================*/
+/* Hover Flip für Desktop */
 @media (hover: hover) and (pointer: fine) {
     .project-card:hover .card-inner {
         transform: rotateY(180deg);
     }
 }
 
-/* Mobile: Flip per Tap (JS setzt .flipped) */
+/* Tap Flip Mobile */
 .project-card.flipped .card-inner {
     transform: rotateY(180deg);
 }
-
 
 .card-front,
 .card-back {
@@ -421,33 +426,6 @@ section>h2 {
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-.card-title {
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-}
-
-
-/* ========================card overlay ================================================================================================*/
-.card-overlay {
-    position: absolute;
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    align-items: flex-end;
-    padding: 16px;
-
-    opacity: 0;
-    transition: opacity 0.3s ease;
-
-    pointer-events: none;
-}
-
-
-
 
 .card-front img {
     width: 100%;
@@ -466,18 +444,83 @@ section>h2 {
     gap: 1rem;
 }
 
+.card-back h3 {
+    color: var(--accent);
+}
+
 .card-back span {
     color: var(--accent);
     font-size: 0.9rem;
 }
 
-/* Responsive */
+/* ========================= FLIPCARD POPUP BUTTON ========================= */
+.card-back .img-popup-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, var(--accent), #27ae60);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.card-back .img-popup-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* ========================= RESPONSIVE FLIPCARD BUTTON ========================= */
+@media (max-width: 768px) {
+    .card-back .img-popup-btn {
+        font-size: 0.95rem;
+        padding: 0.8rem 1.6rem;
+    }
+}
+
+/* ------------------------- POPUP OVERLAY ------------------------- */
+.img-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+}
+
+.img-popup.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.img-popup img {
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+.popup-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ------------------------- RESPONSIVE ------------------------- */
 @media (max-width: 768px) {
     .project-card {
         width: 260px;
         height: 340px;
     }
-
 }
 
 /* ========================popup overlay ================================================================================================*/
@@ -514,14 +557,6 @@ section>h2 {
     color: #fff;
     cursor: pointer;
 }
-
-
-
-
-
-
-
-
 
 /* ========================= CONTACT SECTION ========================================================================= */
 .contact {
@@ -607,7 +642,6 @@ section>h2 {
 .form-status.error {
     color: #ff6b6b;
 }
-
 
 /* ========================= FOOTER ========================================================================= */
 footer {

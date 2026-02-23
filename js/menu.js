@@ -1,232 +1,360 @@
+
+
 /* ======================================================================================================================
-   SELECT ELEMENTS
-========================= */
-const navbar = document.querySelector('.navbar');
-const navHeight = navbar ? navbar.offsetHeight : 0;
+   CONFIG
+====================================================================================================================== */
+const CONFIG = {
+    NAV_SCROLL_THRESHOLD: 50,
+    CAROUSEL_AUTO_INTERVAL: 5000
+};
 
-const navLinks = document.querySelectorAll('.nav-links a');
-const sections = Array.from(navLinks)
-    .map(link => document.querySelector(link.getAttribute('href')))
-    .filter(Boolean);
-
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinksContainer = document.querySelector('.nav-links');
-
-/* =========================
-   SMOOTH SCROLL
-========================= */
-navLinks.forEach(link => {
-    link.addEventListener('click', e => {
-        const target = document.querySelector(link.getAttribute('href'));
-        if (!target) return;
-
-        e.preventDefault();
-        const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
-        window.scrollTo({ top: y, behavior: 'smooth' });
-
-        // Close mobile menu
-        if (navLinksContainer.classList.contains('open')) {
-            navLinksContainer.classList.remove('open');
-            menuToggle.classList.remove('open');
-            menuToggle.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-    });
-});
-
-/* =========================
-   NAVBAR SCROLL EFFECT & ACTIVE LINK
-========================= */
-window.addEventListener('scroll', () => {
-    if (!navbar) return;
-
-    navbar.style.backgroundColor =
-        window.scrollY > 50 ? 'rgba(10, 110, 10, 0.48)' : 'rgba(10, 10, 10, 0.51)';
-
-    const scrollPos = window.pageYOffset + navHeight + 10;
-    sections.forEach(section => {
-        if (!section) return;
-        const top = section.offsetTop;
-        const bottom = top + section.offsetHeight;
-        const id = section.id;
-
-        if (scrollPos >= top && scrollPos < bottom) {
-            navLinks.forEach(link => link.classList.remove('active'));
-            const activeLink = Array.from(navLinks).find(
-                link => link.getAttribute('href') === `#${id}`
-            );
-            if (activeLink) activeLink.classList.add('active');
-        }
-    });
-});
-
-/* =========================
-   HAMBURGER MENU TOGGLE
-========================= */
-if (menuToggle && navLinksContainer) {
-    menuToggle.addEventListener('click', () => {
-        const isOpen = navLinksContainer.classList.toggle('open');
-        menuToggle.classList.toggle('open');
-        menuToggle.setAttribute('aria-expanded', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
-}
-
-/* =========================
-   SCROLL REVEAL
-========================= */
-const revealElements = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(
-    entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
-        });
+/* ======================================================================================================================
+   UTILITIES
+====================================================================================================================== */
+const Util = {
+    getTranslateX(el) {
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+        return matrix.m41;
     },
-    { rootMargin: '0px 0px -100px 0px', threshold: 0.1 }
-);
-revealElements.forEach(el => observer.observe(el));
+    clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+    },
+    on(el, event, handler) {
+        el?.addEventListener(event, handler);
+    }
+};
 
-/* =========================
-   TYPED JS
-========================= */
-var typed = new Typed(".auto-type", {
-    strings: ["Mediengestalter", "Creator", "Coder"],
-    typeSpeed: 50,
-    backSpeed: 50,
-    loop: true
-});
+/* ======================================================================================================================
+   NAVBAR COMPONENT
+====================================================================================================================== */
+class Navbar {
+    constructor({ selector }) {
+        this.navbar = document.querySelector(selector);
+        this.links = document.querySelectorAll(`${selector} .nav-links a`);
+        this.menuToggle = document.querySelector(`${selector} .menu-toggle`);
+        this.linksContainer = document.querySelector(`${selector} .nav-links`);
+        this.scrollThreshold = CONFIG.NAV_SCROLL_THRESHOLD;
+        this.sections = Array.from(this.links)
+            .map(link => document.querySelector(link.getAttribute('href')))
+            .filter(Boolean);
 
-/* =========================
-   CONTACT FORM (Formspree)
-========================= */
-const form = document.querySelector('#contactForm');
-const status = document.querySelector('.form-status');
-
-if (form) {
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const data = new FormData(form);
-
-        try {
-            const response = await fetch(form.action, {
-                method: form.method,
-                body: data,
-                headers: { 'Accept': 'application/json' }
-            });
-
-            if (response.ok) {
-                status.textContent = '✅ Nachricht erfolgreich gesendet!';
-                status.style.color = '#2ecc71';
-                form.reset();
-            } else {
-                status.textContent = '❌ Fehler beim Senden. Bitte erneut versuchen.';
-                status.style.color = '#e74c3c';
-            }
-        } catch {
-            status.textContent = '❌ Netzwerkfehler. Bitte später erneut.';
-            status.style.color = '#e74c3c';
-        }
-    });
-}
-
-/* =========================
-   PROJECTS CAROUSEL
-========================= */
-const track = document.querySelector('.carousel-track');
-const cards = document.querySelectorAll('.project-card');
-const prevBtn = document.querySelector('.carousel-btn.prev');
-const nextBtn = document.querySelector('.carousel-btn.next');
-
-let index = 0;
-
-function updateCarousel() {
-    if (!track || cards.length === 0) return;
-
-    const cardWidth = cards[0].offsetWidth;
-    const gap = 32;
-    const carousel = document.querySelector('.projects-carousel');
-    const carouselWidth = carousel.offsetWidth;
-
-    const totalWidth = cards.length * cardWidth + (cards.length - 1) * gap;
-
-    let offset;
-
-    if (totalWidth <= carouselWidth) {
-        // Alle Cards passen -> zentrieren
-        offset = (carouselWidth - totalWidth) / 2;
-    } else {
-        // Mehr Cards als Container -> aktuelle Card zentrieren
-        offset = (carouselWidth - cardWidth) / 2 - index * (cardWidth + gap);
-
-        // Max/Min Offset damit nicht über Scrollbereich hinaus
-        const maxOffset = 0;
-        const minOffset = carouselWidth - totalWidth;
-        if (offset > maxOffset) offset = maxOffset;
-        if (offset < minOffset) offset = minOffset;
+        this.init();
     }
 
-    // Setze transform
-    track.style.transform = `translateX(${offset}px)`;
+    getHeight() {
+        return this.navbar ? this.navbar.offsetHeight : 0;
+    }
+
+    handleScroll() {
+        if (!this.navbar) return;
+
+        const scrolled = window.scrollY > this.scrollThreshold;
+        this.navbar.classList.toggle('scrolled', scrolled);
+
+        const scrollPos = window.pageYOffset + this.getHeight() + 10;
+
+        this.sections.forEach(section => {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            if (scrollPos >= top && scrollPos < bottom) {
+                this.links.forEach(link => link.classList.remove('active'));
+                const activeLink = [...this.links]
+                    .find(link => link.getAttribute('href') === `#${section.id}`);
+                activeLink?.classList.add('active');
+            }
+        });
+    }
+
+    init() {
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    this.handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        this.links.forEach(link => {
+            link.addEventListener('click', e => {
+                const target = document.querySelector(link.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                const y = target.getBoundingClientRect().top + window.pageYOffset - this.getHeight();
+                window.scrollTo({ top: y, behavior: 'smooth' });
+
+                if (this.linksContainer?.classList.contains('open')) {
+                    this.linksContainer.classList.remove('open');
+                    this.menuToggle?.classList.remove('open');
+                    this.menuToggle?.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        this.menuToggle?.addEventListener('click', () => {
+            const isOpen = this.linksContainer?.classList.toggle('open');
+            this.menuToggle.classList.toggle('open');
+            this.menuToggle.setAttribute('aria-expanded', !!isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+    }
 }
 
+/* ======================================================================================================================
+   SCROLL REVEAL COMPONENT
+====================================================================================================================== */
+class ScrollReveal {
+    constructor({ selector }) {
+        this.elements = document.querySelectorAll(selector);
+        this.init();
+    }
 
+    init() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '0px 0px -100px 0px', threshold: 0.1 });
 
+        this.elements.forEach(el => observer.observe(el));
+    }
+}
 
+/* ======================================================================================================================
+   TYPED JS COMPONENT
+====================================================================================================================== */
+class AutoType {
+    constructor({ selector, strings, typeSpeed = 50, backSpeed = 50, loop = true }) {
+        if (!window.Typed) return;
+        new Typed(selector, { strings, typeSpeed, backSpeed, loop });
+    }
+}
 
+/* ======================================================================================================================
+   CONTACT FORM COMPONENT
+====================================================================================================================== */
+class ContactForm {
+    constructor({ formSelector, statusSelector }) {
+        this.form = document.querySelector(formSelector);
+        this.status = document.querySelector(statusSelector);
+        this.init();
+    }
 
-window.addEventListener('load', updateCarousel);
-window.addEventListener('resize', updateCarousel);
+    init() {
+        this.form?.addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = new FormData(this.form);
+            const btn = this.form.querySelector('button[type="submit"]');
+            btn.disabled = true;
 
-/* =========================
-   MOBILE TAP FLIP & POPUP FIX
-========================= */
-const popup = document.getElementById('imgPopup');
-const popupImg = popup.querySelector('img');
-const popupClose = popup.querySelector('.popup-close');
+            try {
+                const response = await fetch(this.form.action, {
+                    method: this.form.method,
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
 
-cards.forEach(card => {
-    card.addEventListener('click', e => {
-        const btn = e.target.closest('.img-popup-btn');
+                if (response.ok) {
+                    this.status.textContent = '✅ Nachricht erfolgreich gesendet!';
+                    this.status.style.color = '#2ecc71';
+                    this.form.reset();
+                } else throw new Error();
+            } catch {
+                this.status.textContent = '❌ Fehler beim Senden.';
+                this.status.style.color = '#e74c3c';
+            }
+            btn.disabled = false;
+        });
+    }
+}
 
-        // Button klick → Popup öffnen
-        if (btn) {
-            e.stopPropagation();
-            const imgSrc = btn.dataset.img;
-            popupImg.src = imgSrc;
-            popup.classList.add('active');
-            if (navigator.vibrate) navigator.vibrate(15);
+/* ======================================================================================================================
+   CAROUSEL COMPONENT
+====================================================================================================================== */
+class Carousel {
+    constructor({ carouselSelector, trackSelector, cardSelector, autoInterval = CONFIG.CAROUSEL_AUTO_INTERVAL }) {
+        this.carousel = document.querySelector(carouselSelector);
+        this.track = document.querySelector(trackSelector);
+        this.cards = document.querySelectorAll(cardSelector);
+        this.index = 0;
+        this.autoInterval = autoInterval;
+        this.autoSlide = null;
+        this.startX = 0;
+        this.isDragging = false;
+
+        this.init();
+    }
+
+    getMetrics() {
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.track).gap) || 0;
+        const carouselWidth = this.carousel.offsetWidth;
+        const totalWidth = this.cards.length * cardWidth + (this.cards.length - 1) * gap;
+        return { cardWidth, gap, carouselWidth, totalWidth };
+    }
+
+    update() {
+        if (!this.track || this.cards.length === 0) return;
+        const { cardWidth, gap, carouselWidth, totalWidth } = this.getMetrics();
+
+        if (totalWidth <= carouselWidth) {
+            const offset = (carouselWidth - totalWidth) / 2;
+            this.track.style.transform = `translateX(${offset}px)`;
             return;
         }
 
-        // Flip Karte
-        cards.forEach(c => { if (c !== card) c.classList.remove('flipped'); });
-        const flipped = card.classList.toggle('flipped');
-        if (navigator.vibrate) navigator.vibrate(flipped ? 15 : [10, 40]);
-    });
-});
-
-// Klick außerhalb flip zurücksetzen
-document.addEventListener('click', e => {
-    if (!e.target.closest('.project-card')) {
-        cards.forEach(card => card.classList.remove('flipped'));
+        const offset = (carouselWidth - cardWidth) / 2 - this.index * (cardWidth + gap);
+        this.track.style.transform = `translateX(${offset}px)`;
     }
-});
 
-// Popup schließen
-popupClose.addEventListener('click', closePopup);
-popup.addEventListener('click', e => {
-    if (e.target === popup) closePopup();
-});
-function closePopup() {
-    popup.classList.remove('active');
-    popupImg.src = '';
+    next() {
+        this.index = (this.index + 1) % this.cards.length;
+        this.update();
+    }
+
+    startAuto() {
+        if (this.autoSlide !== null) return;
+        this.autoSlide = setInterval(() => this.next(), this.autoInterval);
+    }
+
+    stopAuto() {
+        if (this.autoSlide === null) return;
+        clearInterval(this.autoSlide);
+        this.autoSlide = null;
+    }
+
+    init() {
+        window.addEventListener('load', () => {
+            this.update();
+            this.startAuto();
+        });
+        window.addEventListener('resize', () => this.update());
+
+        Util.on(this.carousel, 'mouseenter', () => this.stopAuto());
+        Util.on(this.carousel, 'mouseleave', () => this.startAuto());
+
+        /* SWIPE */
+        Util.on(this.carousel, 'touchstart', e => {
+            this.startX = e.touches[0].clientX;
+            this.isDragging = true;
+            this.stopAuto();
+        });
+        Util.on(this.carousel, 'touchend', e => {
+            if (!this.isDragging) return;
+            const deltaX = e.changedTouches[0].clientX - this.startX;
+            this.isDragging = false;
+
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX < 0 && this.index < this.cards.length - 1) this.index++;
+                if (deltaX > 0 && this.index > 0) this.index--;
+            }
+            this.update();
+            this.startAuto();
+        });
+
+        /* KEYBOARD */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') this.next();
+            if (e.key === 'ArrowLeft' && this.index > 0) {
+                this.index--;
+                this.update();
+            }
+        });
+    }
 }
 
-/* =========================
-   CAROUSEL SWIPE MOBILE
-========================= */
+/* ======================================================================================================================
+   POPUP COMPONENT
+====================================================================================================================== */
+class Popup {
+    constructor({ popupSelector, popupCloseSelector, cardSelector }) {
+        this.popup = document.querySelector(popupSelector);
+        this.popupImg = this.popup?.querySelector('img');
+        this.popupClose = document.querySelector(popupCloseSelector);
+        this.cards = document.querySelectorAll(cardSelector);
 
+        this.init();
+    }
+
+    open(src) {
+        if (this.popup && this.popupImg) {
+            this.popupImg.src = src;
+            this.popup.classList.add('active');
+        }
+    }
+
+    close() {
+        if (this.popup) this.popup.classList.remove('active');
+        if (this.popupImg) this.popupImg.src = '';
+    }
+
+    init() {
+        this.cards.forEach(card => {
+            card.setAttribute('tabindex', '0');
+
+            card.addEventListener('click', e => {
+                const btn = e.target.closest('.img-popup-btn');
+                if (btn) {
+                    e.stopPropagation();
+                    this.open(btn.dataset.img);
+                    return;
+                }
+
+                this.cards.forEach(c => c !== card && c.classList.remove('flipped'));
+                card.classList.toggle('flipped');
+            });
+
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter') card.click();
+            });
+        });
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.project-card')) {
+                this.cards.forEach(c => c.classList.remove('flipped'));
+            }
+        });
+
+        this.popupClose?.addEventListener('click', () => this.close());
+        this.popup?.addEventListener('click', e => {
+            if (e.target === this.popup) this.close();
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') this.close();
+        });
+    }
+}
+
+/* ======================================================================================================================
+   INIT ALL COMPONENTS
+====================================================================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    // Navbar
+    if (document.querySelector('.navbar')) new Navbar({ selector: '.navbar' });
+
+    // Scroll Reveal
+    if (document.querySelectorAll('.reveal').length) new ScrollReveal({ selector: '.reveal' });
+
+    // TypedJS
+    if (document.querySelector('.auto-type'))
+        new AutoType({ selector: '.auto-type', strings: ["Mediengestalter", "Creator", "Coder"] });
+
+    // ContactForm
+    if (document.querySelector('#contactForm'))
+        new ContactForm({ formSelector: '#contactForm', statusSelector: '.form-status' });
+
+    // Carousel
+    if (document.querySelector('.projects-carousel') && document.querySelector('.carousel-track') && document.querySelectorAll('.project-card').length)
+        new Carousel({ carouselSelector: '.projects-carousel', trackSelector: '.carousel-track', cardSelector: '.project-card' });
+
+    // Popup
+    if (document.querySelector('#imgPopup') && document.querySelectorAll('.project-card').length)
+        new Popup({ popupSelector: '#imgPopup', popupCloseSelector: '.popup-close', cardSelector: '.project-card' });
+});

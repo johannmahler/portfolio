@@ -3,28 +3,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- Mobile First -->
+    <!-- ================================================Mobile First ================================================================-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile Web | Johann Mahler</title>
     <meta name="description" content="Clean, mobile-first HTML5 base layout for a scalable responsive web project.">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Johann Mahler">
-    <!-- Font Awesome -->
+    <!-- ================================================ Font Awesome ================================================-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- CSS -->
+    <!-- ================================================CSS ================================================-->
     <link rel="stylesheet" href="css/style.css">
-    <!-- JS -->
+    <!-- ================================================JS ================================================-->
     <script src="js/menu.js" defer></script>
 </head>
 
 <body>
-    <!-- Navigation -->
+    <!-- ================================================Navigation ================================================-->
     <nav class="navbar">
         <a href="#home" class="logo">JMDesign</a>
 
-        <!-- Hamburger button -->
+        <!-- ================================================Hamburger button ================================================-->
         <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
             <span></span>
             <span></span>
@@ -39,7 +39,7 @@
         </ul>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- ================================================Hero Section ================================================-->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1>Ich bin&nbsp;<span class="auto-type"></span></h1>
@@ -53,7 +53,7 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
+    <!-- ================================================Skills Section ================================================-->
     <section id="skills" class="skills reveal">
         <h2>Technical expertise</h2>
         <div class="skills-grid">
@@ -79,120 +79,76 @@
             </div>
         </div>
     </section>
-    <!-- projects  carousel section -->
+    <!-- ================================================ projects  carousel section ================================================-->
     <section id="projects" class="projects reveal">
         <h2>Projects</h2>
         <div class="projects-carousel">
-
+            <!-- --------------------dots scroll carousel------------------------ -->
 
             <!-- Carousel Track: nur EIN Track, alle Cards darin -->
             <div class="carousel-track">
-                <!-- Project Card 1 -->
+                <!-- ================================================Project Card 1 -->
                 <div class="project-card">
                     <div class="card-inner">
                         <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
+                            <img src="images/bild2.jpg" alt="Project 1">
+                        </div>
+                        <div class="card-back">
+                            <h3>Projekt Logo</h3>
+                            <p>Entwicklung meines Logos.</p>
+                            <span>Skizze | Freehand </span>
+                            <!-- Button Rücdkseite Flipcard -->
+                            <button class="cta-button img-popup-btn" data-img="images/bild2.jpg">Bild
+                                ansehen</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ================================================Project Card 2 -->
+                <div class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="images/bild3.jpg" alt="Project 1">
+                        </div>
+                        <div class="card-back">
+                            <h3>Projekt Web</h3>
+                            <p>Web Development</p>
+                            <span>HTML · CSS · JS</span>
+                            <button class="cta-button img-popup-btn" data-img="images/bild3.jpg">Bild
+                                ansehen</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ================================================Project Card 3 -->
+                <div class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="images/bid4.jpg" alt="Project 1">
                         </div>
                         <div class="card-back">
                             <h3>Projekt Titel 1</h3>
                             <p>Kurzbeschreibung des Projekts 1.</p>
                             <span>HTML · CSS · JS</span>
-                            <!-- Button Rückseite Flipcard -->
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
+                            <button class="cta-button img-popup-btn" data-img="images/bid4">Bild
                                 ansehen</button>
                         </div>
                     </div>
                 </div>
-                <!-- Project Card 2 -->
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <img src="images/main_photo.jpg" alt="Project 1">
-                        </div>
-                        <div class="card-back">
-                            <h3>Projekt Titel 1</h3>
-                            <p>Kurzbeschreibung des Projekts 1.</p>
-                            <span>HTML · CSS · JS</span>
-                            <button class="cta-button img-popup-btn" data-img="images/main_photo.jpg">Bild
-                                ansehen</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- ================================================Project Card 4 -->
+
+                <!-- ================================================Project Card 5 -->
+
+                <!-- ================================================Project Card 6 -->
+
+            </div>
+            <div class="carousel-dots">
+                <button class="dot active"></button>
+                <button class="dot"></button>
+                <button class="dot"></button>
             </div>
         </div>
     </section>
 
-    <!-- Image Popup -->
+    <!-- Image Popup -------------------------------------------------------------------------------------------->
     <div id="imgPopup" class="img-popup">
         <span class="popup-close">&times;</span>
         <img src="" alt="Project Image">
@@ -200,7 +156,7 @@
 
 
 
-    <!-- Contact Section -->
+    <!-- Contact Section -------------------------------------------------------------------------------------------->
     <section id="contact" class="contact reveal">
         <h2>Contact Me</h2>
         <p>Hast du ein Projekt oder eine Idee? Schreib mir gern eine Nachricht.</p>

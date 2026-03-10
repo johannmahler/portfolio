@@ -26,6 +26,42 @@ body {
     overflow-x: hidden;
 }
 
+/* ========================= PROJECT PREVIEW ========================= */
+
+.project-preview {
+    position: fixed;
+    width: 220px;
+    height: 140px;
+    pointer-events: none;
+    z-index: 2500;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.project-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* ========================= SCROLL PROGRESS BAR ========================= */
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    z-index: 2000;
+    transition: width 0.1s linear;
+}
+
 /* ========================= NAVBAR ================================================================================================ */
 .navbar {
     position: fixed;
@@ -35,7 +71,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(10, 20, 20, 0.284);
+    background: rgba(29, 102, 80, 0.284);
     backdrop-filter: blur(10px);
     z-index: 1000;
     /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
@@ -158,16 +194,47 @@ body {
     align-items: center;
     padding: 12% 5%;
     background: radial-gradient(circle at 75% 30%, var(--accent-glow) 0%, transparent 30%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(46, 204, 113, 0.25), transparent 70%);
+    top: 20%;
+    left: 60%;
+    filter: blur(80px);
+    animation: heroGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+
+    0% {
+        transform: translate(-50px, -50px) scale(1);
+    }
+
+    100% {
+        transform: translate(50px, 50px) scale(1.2);
+    }
+
 }
 
 .hero-content {
     flex: 1;
     padding-right: 5rem;
+    will-change: transform, opacity;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+
 }
 
 .hero-image {
     flex: 1;
     text-align: center;
+    will-change: transform;
+    transition: transform 0.2s ease-out;
 }
 
 .profile-img {
@@ -356,37 +423,10 @@ section>h2 {
     display: flex;
     gap: 2rem;
     /* align-items: center; */
-    transition: transform 0.4s ease;
+    transition: transform 0.4s ease cubic-bezier(.22, .61, .36, 1);
 }
 
-/* ========================= PROJECTS CAROUSEL RESPONSIVE FIX ========================================================================= */
-@media (max-width: 768px) {
-    .projects-carousel {
-        display: block;
-        /* nicht flex, damit erste Card links bleibt */
-        overflow-x: auto;
-        /* horizontal scroll für Swipe */
-        scroll-snap-type: x mandatory;
-        /* smooth snapping */
-        -webkit-overflow-scrolling: touch;
-        /* iOS momentum scroll */
-    }
 
-    .carousel-track {
-        display: flex;
-        gap: 1rem;
-        padding-left: 1rem;
-        /* Abstand links */
-        scroll-snap-type: x mandatory;
-    }
-
-    .project-card {
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-        /* Card linksbündig beim scrollen */
-        margin-right: 1rem;
-    }
-}
 
 /* ------------------------- FLIP CARDS ------------------------- */
 .project-card {
@@ -394,6 +434,44 @@ section>h2 {
     height: 380px;
     perspective: 1000px;
     flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ========================= CARD LIGHT REFLECTION ========================= */
+
+.project-card::before {
+    content: "";
+    position: absolute;
+    top: -150%;
+    left: -150%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(120deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.15),
+            transparent 70%);
+    transform: rotate(25deg);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.project-card:hover::before {
+    animation: shine 1.2s ease forwards;
+    opacity: 1;
+}
+
+@keyframes shine {
+
+    0% {
+        transform: translateX(-120%) rotate(25deg);
+    }
+
+    100% {
+        transform: translateX(120%) rotate(25deg);
+    }
+
 }
 
 .card-inner {
@@ -692,6 +770,7 @@ footer {
     .hero-content {
         padding-right: 0;
         margin-bottom: 3rem;
+        will-change: transform;
     }
 
     .profile-img {

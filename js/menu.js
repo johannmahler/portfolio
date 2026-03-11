@@ -276,7 +276,7 @@
             const card = this.cards[0];
             if (!card) return;
 
-            const gap = 32;
+            const gap = parseInt(getComputedStyle(this.track).gap) || 32;
             const width = card.offsetWidth + gap;
 
             this.track.style.transform = `translateX(-${this.index * width}px)`;
@@ -327,7 +327,7 @@
                 const endX = e.changedTouches[0].clientX;
                 const diff = startX - endX;
 
-                if (Math.abs(diff) < 50) return;
+                if (Math.abs(diff) < 30) return;
 
                 if (diff > 0) this.goTo(this.index + 1);
                 else this.goTo(this.index - 1);
@@ -404,6 +404,16 @@
                     this.cards.forEach(c => c !== card && c.classList.remove('flipped'));
 
                     card.classList.toggle('flipped');
+
+                });
+                /* Keyboard Support (Accessibility) */
+                card.addEventListener("keydown", e => {
+
+                    if (e.key === "Enter") {
+
+                        card.classList.toggle("flipped");
+
+                    }
 
                 });
 

@@ -451,6 +451,7 @@ section>h2 {
     border-radius: 18px;
 
     pointer-events: none;
+    z-index: 2;
 }
 
 /* glasomorphy */
@@ -481,6 +482,37 @@ section>h2 {
     opacity: 0.85;
 }
 
+/* card front text */
+/* ===== Front Card Text ===== */
+
+.card-front-text {
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    padding: 1rem;
+
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.75),
+            rgba(0, 0, 0, 0.0));
+
+    color: #fff;
+    text-align: left;
+    z-index: 5;
+    /* TEXT ÜBER GLASS */
+}
+
+.card-front-text h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+
+}
+
+.card-front-text p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
 /* Glass Reflection */
 
 .card-front::before {
@@ -495,6 +527,7 @@ section>h2 {
 
     mix-blend-mode: overlay;
     pointer-events: none;
+    z-index: 3;
 }
 
 /* ===== Desktop Hover Light Effect ===== */
